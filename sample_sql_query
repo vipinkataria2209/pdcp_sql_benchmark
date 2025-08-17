@@ -1,1 +1,103 @@
 
+# PDCP-SQL Query Examples with Dimension Scoring
+
+## Level 1 - Simple Queries (25 queries, Score 5-7)
+
+### Query L1-01: Basic Entity Selection
+**Natural Language**: "List all PDCP entities that use RLC-AM mode"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT entity_id, entity_type, plane, direction, pdcp_sn_size
+FROM pdcp_entities
+WHERE rlc_mode = 'AM'
+ORDER BY entity_id;
+```
+
+### Query L1-02: Count Timers by Type
+**Natural Language**: "How many timers exist for each timer type?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT timer_type, COUNT(*) as timer_count
+FROM pdcp_timers
+GROUP BY timer_type
+ORDER BY timer_count DESC;
+```
+
+### Query L1-03: Find Mandatory Security Algorithms
+**Natural Language**: "Which security algorithms are mandatory in LTE?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT algorithm_id, algorithm_name, algorithm_type, algorithm_description
+FROM pdcp_security_algorithms
+WHERE mandatory = TRUE
+ORDER BY algorithm_type, algorithm_id;
+```
+
+### Query L1-04: List DRB Configurations
+**Natural Language**: "Show all data radio bearer configurations"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT entity_id, pdcp_sn_size, rlc_mode, rohc_configured, ciphering_configured
+FROM pdcp_entities
+WHERE entity_type = 'DRB'
+ORDER BY entity_id;
+```
+
+### Query L1-05: ROHC Profiles for VoIP
+**Natural Language**: "Which ROHC profiles are suitable for VoIP?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT profile_id, profile_name, typical_compression_ratio
+FROM pdcp_rohc_profiles
+WHERE suitable_for_voip = TRUE
+ORDER BY typical_compression_ratio;
+```
+
+### Query L1-06: Timer Default Values
+**Natural Language**: "What are the default values for all PDCP timers?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT timer_name, timer_type, default_value_ms, infinite_value_supported
+FROM pdcp_timers
+WHERE default_value_ms IS NOT NULL
+ORDER BY timer_type, timer_name;
+```
+
+### Query L1-07: Count Parameters by Category
+**Natural Language**: "How many parameters exist in each category?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT parameter_category, COUNT(*) as param_count
+FROM pdcp_parameters
+GROUP BY parameter_category
+ORDER BY param_count DESC;
+```
+
+### Query L1-08: Error Severity Distribution
+**Natural Language**: "Show the distribution of error cases by severity"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=2 (Total: 6)
+```sql
+SELECT severity, COUNT(*) as error_count
+FROM pdcp_error_cases
+GROUP BY severity
+ORDER BY FIELD(severity, 'Fatal', 'Major', 'Minor', 'Warning');
+```
+
+### Query L1-09: Procedures by Category
+**Natural Language**: "List all security-related procedures"
+**Dimensions**: D1=1, D2=2, D3=1, D4=1, D5=1 (Total: 6)
+```sql
+SELECT procedure_id, procedure_name, performance_impact
+FROM pdcp_procedures
+WHERE procedure_category = 'Security'
+ORDER BY procedure_name;
+```
+
+### Query L1-10: Measurement Types
+**Natural Language**: "What types of measurements are standardized?"
+**Dimensions**: D1=1, D2=1, D3=1, D4=1, D5=1 (Total: 5)
+```sql
+SELECT measurement_name, measurement_type, measurement_unit
+FROM pdcp_measurements
+WHERE standardized = TRUE
+ORDER BY measurement_type, measurement_name;
